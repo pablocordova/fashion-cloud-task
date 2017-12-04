@@ -15,6 +15,12 @@ router.post('/', (req, res) => {
 
 router.get('/', (req, res) => {
 
+  mykeys = myCache.keys();
+
+  return res.status(config.STATUS.OK).send({
+    keys: mykeys
+  });
+
 });
 
 router.get('/:key', (req, res) => {

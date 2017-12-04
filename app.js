@@ -1,6 +1,7 @@
 
 // External modules
 require('dotenv').config();
+const bluebird = require('bluebird');
 const bodyParser = require('body-parser');
 const express = require('express');
 const http = require('http');
@@ -21,6 +22,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Connection with Mongo
 
+mongoose.Promise = bluebird;
+
 let mongo_path= process.env.MONGO_PATH;
 
 mongoose.connect(mongo_path, { useMongoClient: true }, err => {
@@ -31,7 +34,7 @@ mongoose.connect(mongo_path, { useMongoClient: true }, err => {
  * ROUTES
  */
 
-app.use('api/cache', cache);
+app.use('/api/cache', cache);
 
 /**
  * INTIALIZE SERVER

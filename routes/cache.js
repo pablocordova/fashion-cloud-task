@@ -114,7 +114,17 @@ router.delete('/', (req, res) => {
 
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:key', (req, res) => {
+
+  const key = req.params.key;
+
+  const value = myCache.del(key);
+
+  return res.status(config.STATUS.OK).send({
+    message: config.RES.DELETED_KEY_CACHE,
+    key: key,
+    quantity: value
+  });
 
 });
 

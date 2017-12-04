@@ -19,4 +19,6 @@ config.STATUS = {
 // time expired 1 hour
 config.TTL = 3600;
 
+config.MAX_DATA_CACHE = 5;
+
 module.exports = config;

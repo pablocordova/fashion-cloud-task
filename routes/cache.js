@@ -80,6 +80,13 @@ router.get('/:key', async (req, res) => {
 
     // If exits, then only create one in cache
     if (data) {
+      // First check if the cache is in the limit, if is in the limit then replace oldest key
+      const mykeys = myCache.keys();
+      if (mykeys.length + 1> config.MAX_DATA_CACHE) {
+        //Delete the oldest
+        myCache.del(mykeys[0]);
+      }
+
       const keyString = data.data;
       // update cache with this one
       obj = { data: keyString };

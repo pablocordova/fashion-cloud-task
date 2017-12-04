@@ -112,6 +112,14 @@ router.get('/:key', async (req, res) => {
 
 router.delete('/', (req, res) => {
 
+  myCache.flushAll();
+  const info = myCache.getStats();
+
+  return res.status(config.STATUS.OK).send({
+    message: config.RES.DELETED_ALL_CACHE,
+    info: info
+  });
+
 });
 
 router.delete('/:key', (req, res) => {

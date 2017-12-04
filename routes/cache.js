@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 
 });
 
-router.get('/:key', (req, res) => {
+router.get('/:key', async (req, res) => {
 
 
   const key = req.params.key
@@ -36,14 +36,24 @@ router.get('/:key', (req, res) => {
   // Case key doesn't exits
   if ( value == undefined ){
 
-    // Create one
-    const stringRandom = randomstring.generate(7);
-    obj = { data: stringRandom };
-    myCache.set(key, obj, 10000 );
+    // Make question if this key exists in MongoDB
+    const data = await Data.findOne({ key: key });
 
-    status = config.STATUS.CREATED;
-    message = config.RES.CACHE_MISS
-    string = stringRandom;
+    // If exits, then only create one in cache
+    if (data) {
+      const keyString = data.data;
+      // update cache with this one
+      obj = { data: keyString };
+      myCache.set(key, obj, 10000 );
+
+      status = config.STATUS.CREATED;
+      message = config.RES.CACHE_MISS
+      string = keyString;
+    } else {
+      // Return data no exits in cache or database
+      status = config.STATUS.OK;
+      message = config.RES.NOT_FOUND
+    }
 
   } else {
 

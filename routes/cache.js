@@ -1,7 +1,7 @@
 // External modules
 const express = require('express');
-const NodeCache = require( "node-cache" );
-const randomstring = require("randomstring");
+const NodeCache = require( 'node-cache');
+const randomstring = require('randomstring');
 const router = express.Router();
 
 const config = require('../config/data');
@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
 
 router.get('/', (req, res) => {
 
-  mykeys = myCache.keys();
+  const mykeys = myCache.keys();
 
   return res.status(config.STATUS.OK).send({
     keys: mykeys
@@ -65,7 +65,7 @@ router.get('/', (req, res) => {
 router.get('/:key', async (req, res) => {
 
 
-  const key = req.params.key
+  const key = req.params.key;
   const value = myCache.get(key);
 
   let status = '';
@@ -89,23 +89,23 @@ router.get('/:key', async (req, res) => {
 
       const keyString = data.data;
       // update cache with this one
-      obj = { data: keyString };
+      const obj = { data: keyString };
       myCache.set(key, obj, config.TTL );
 
       status = config.STATUS.CREATED;
-      message = config.RES.CACHE_MISS
+      message = config.RES.CACHE_MISS;
       string = keyString;
     } else {
       // Return data no exits in cache or database
       status = config.STATUS.OK;
-      message = config.RES.NOT_FOUND
+      message = config.RES.NOT_FOUND;
     }
 
   } else {
     // Also is necessary update new TTL case the key in cache is consumed
     myCache.ttl(key, config.TTL);
-    status = config.STATUS.OK
-    message = config.RES.CACHE_HIT
+    status = config.STATUS.OK;
+    message = config.RES.CACHE_HIT;
     string = value.data;
 
   }

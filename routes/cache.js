@@ -9,7 +9,46 @@ const Data = require('../models/data');
 
 const myCache = new NodeCache();
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+
+  const data = await Data.findOne({ key: req.body.key });
+
+  // Case exit in database, the update it with new string randowm
+  if (data) {
+    data.data = randomstring.generate(7);
+    data.save()
+      .then((dataUpdated) => {
+        return res.status(config.STATUS.OK).send({
+          message: config.RES.UPDATED,
+          result: dataUpdated
+        });
+      })
+      .catch((error) => {
+        return res.status(config.STATUS.SERVER_ERROR).send({
+          message: config.RES.ERROR,
+          result: error
+        });
+      });
+  } else {
+    // Else create one
+    let newData = new Data;
+    newData.key = req.body.key;
+    newData.data = randomstring.generate(7);
+
+    newData.save()
+      .then((dataCreated) => {
+        return res.status(config.STATUS.CREATED).send({
+          message: config.RES.CREATED,
+          result: dataCreated
+        });
+      })
+      .catch((error) => {
+        return res.status(config.STATUS.SERVER_ERROR).send({
+          message: config.RES.ERROR,
+          result: error
+        });
+      });
+  }
 
 });
 

@@ -16,4 +16,7 @@ config.STATUS = {
   SERVER_ERROR: 500
 };
 
+// time expired 1 hour
+config.TTL = 3600;
+
 module.exports = config;

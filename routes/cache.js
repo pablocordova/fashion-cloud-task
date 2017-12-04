@@ -72,7 +72,7 @@ router.get('/:key', async (req, res) => {
   let message = '';
   let string = '';
 
-  // Case key doesn't exits
+  // Case key doesn't exits the key in cache
   if ( value == undefined ){
 
     // Make question if this key exists in MongoDB
@@ -83,7 +83,7 @@ router.get('/:key', async (req, res) => {
       const keyString = data.data;
       // update cache with this one
       obj = { data: keyString };
-      myCache.set(key, obj, 10000 );
+      myCache.set(key, obj, config.TTL );
 
       status = config.STATUS.CREATED;
       message = config.RES.CACHE_MISS
@@ -95,7 +95,8 @@ router.get('/:key', async (req, res) => {
     }
 
   } else {
-
+    // Also is necessary update new TTL case the key in cache is consumed
+    myCache.ttl(key, config.TTL);
     status = config.STATUS.OK
     message = config.RES.CACHE_HIT
     string = value.data;
